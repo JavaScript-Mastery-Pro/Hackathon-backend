@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './../auth';
 import { PrismaModule } from './lib/database/prisma.module';
+import { HackathonModule } from './module/hackathon/hackathon.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PrismaModule } from './lib/database/prisma.module';
     PrismaModule,
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    HackathonModule,
   ],
   controllers: [AppController],
   providers: [AppService],

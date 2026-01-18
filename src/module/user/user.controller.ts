@@ -1,10 +1,13 @@
 import { Controller, Get, Param, UseGuards } from '@nestjs/common';
-import { AuthGuard, Roles, Session } from '@thallesp/nestjs-better-auth';
+import { AuthGuard, Session } from '@thallesp/nestjs-better-auth';
 import type { UserSession } from '@thallesp/nestjs-better-auth';
 import { UserService } from './user.service';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
+import { ResponseMessage } from '@/common/decorators/response-message.decorator';
 
 @Controller('user')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
@@ -14,7 +17,8 @@ export class UserController {
   }
 
   @Get()
-  @Roles(['ADMIN'])
+  @Roles('ADMIN')
+  @ResponseMessage('Fetch all users')
   findAll() {
     return this.userService.findAllUsers();
   }
