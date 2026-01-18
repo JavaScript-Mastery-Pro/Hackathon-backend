@@ -6,16 +6,17 @@ enum UserRole {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String      @id @default(cuid())
   name          String
   email         String
-  role          UserRole  @default(PARTICIPANT)
-  emailVerified Boolean   @default(false)
+  role          UserRole    @default(PARTICIPANT)
+  emailVerified Boolean     @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
   sessions      Session[]
   accounts      Account[]
+  hackathons    Hackathon[]
 
   @@unique([email])
   @@map("user")
