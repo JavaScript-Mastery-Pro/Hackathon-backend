@@ -7,6 +7,8 @@ import { AuthModule } from '@thallesp/nestjs-better-auth';
 import { auth } from './../auth';
 import { PrismaModule } from './lib/database/prisma.module';
 import { HackathonModule } from './module/hackathon/hackathon.module';
+import { MailService } from './lib/mail/mail.service';
+import { MailModule } from './lib/mail/mail.module';
 
 @Module({
   imports: [
@@ -15,8 +17,9 @@ import { HackathonModule } from './module/hackathon/hackathon.module';
     UserModule,
     ConfigModule.forRoot({ isGlobal: true }),
     HackathonModule,
+    MailModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, MailService],
 })
 export class AppModule {}
