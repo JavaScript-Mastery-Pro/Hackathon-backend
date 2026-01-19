@@ -6,10 +6,14 @@ import {
 import { CreateHackathonDto } from './dto/create-hackathon.dto';
 import { UpdateHackathonDto } from './dto/update-hackathon.dto';
 import { PrismaService } from '@/lib/database/prisma.service';
+import { MailService } from '@/lib/mail/mail.service';
 
 @Injectable()
 export class HackathonService {
-  constructor(private prisma: PrismaService) {}
+  constructor(
+    private prisma: PrismaService,
+    private mailService: MailService,
+  ) {}
 
   async createHackathon(
     createHackathonDto: CreateHackathonDto,
@@ -96,6 +100,11 @@ export class HackathonService {
       data: { hackathonId, userId },
     });
     console.log('Confirmation email sent');
+    await this.mailService.sendHackathonJoinConfirmation(
+      user.email,
+      user.name,
+      hackathon.name,
+    );
 
     return participant;
   }
