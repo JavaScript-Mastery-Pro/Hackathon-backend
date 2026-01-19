@@ -24,7 +24,7 @@ export class HackathonController {
   constructor(private readonly hackathonService: HackathonService) {}
 
   @Post('create')
-  @Roles('ADMIN')
+  // @Roles('ADMIN')
   @ResponseMessage('Hackathon created successfully')
   createHackathon(
     @Body() createHackathonDto: CreateHackathonDto,
@@ -37,6 +37,7 @@ export class HackathonController {
   }
 
   @Get()
+  // @Roles('ADMIN')
   findAll() {
     return this.hackathonService.findAllHackathons();
   }
