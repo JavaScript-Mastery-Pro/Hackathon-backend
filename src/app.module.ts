@@ -9,6 +9,9 @@ import { PrismaModule } from './lib/database/prisma.module';
 import { HackathonModule } from './module/hackathon/hackathon.module';
 import { MailService } from './lib/mail/mail.service';
 import { MailModule } from './lib/mail/mail.module';
+import { BullmqModule } from './lib/bullmq/bullmq.module';
+import { QueueModule } from './lib/queue/queue.module';
+import { SubmissionModule } from './module/submission/submission.module';
 
 @Module({
   imports: [
@@ -18,6 +21,9 @@ import { MailModule } from './lib/mail/mail.module';
     ConfigModule.forRoot({ isGlobal: true }),
     HackathonModule,
     MailModule,
+    BullmqModule,
+    QueueModule,
+    SubmissionModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
