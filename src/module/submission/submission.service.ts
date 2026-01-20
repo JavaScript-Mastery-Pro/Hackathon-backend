@@ -2,6 +2,7 @@ import {
   BadRequestException,
   Injectable,
   InternalServerErrorException,
+  NotFoundException,
 } from '@nestjs/common';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
@@ -47,7 +48,7 @@ export class SubmissionService {
       );
     }
 
-    const submission = await this.prisma.submission.create({
+    const newSubmission = await this.prisma.submission.create({
       data: {
         title: createSubmissionDto.title,
         description: createSubmissionDto.description,
@@ -59,7 +60,7 @@ export class SubmissionService {
     });
 
     const tempDir = path.join(process.cwd(), 'uploads', 'temp');
-    const tempFilePath = path.join(tempDir, `${submission.id}.tmp`);
+    const tempFilePath = path.join(tempDir, `${newSubmission.id}.tmp`);
 
     try {
       // Ensure directory exists (recursive: true handles if it already exists)
@@ -72,7 +73,7 @@ export class SubmissionService {
       await this.submissionQueue.add(
         'process-submission',
         {
-          submissionId: submission.id,
+          submissionId: newSubmission.id,
           tempFilePath,
           originalFilename: file.originalname,
           userEmail: participant.user.email, // Accessed from the single query above
@@ -89,7 +90,7 @@ export class SubmissionService {
       // 6. Cleanup on Failure (Best Practice)
       // If writing the file or adding to queue fails, we should delete the DB record
       // so the user can try again without seeing a stuck "Processing" submission.
-      await this.prisma.submission.delete({ where: { id: submission.id } });
+      await this.prisma.submission.delete({ where: { id: newSubmission.id } });
 
       // Attempt to clean up the file if it was partially written
       await fs.unlink(tempFilePath).catch(() => {});
@@ -98,6 +99,41 @@ export class SubmissionService {
         error instanceof Error ? error.message : 'Failed to process submission',
       );
     }
-    return true;
+    return newSubmission;
+  }
+
+  async findAllSubmissions(userId: string, userRole: string) {
+    const where = userRole === 'ADMIN' ? {} : { userId };
+
+    return this.prisma.submission.findMany({
+      where,
+      include: {
+        hackathon: true,
+      },
+      orderBy: {
+        createdAt: 'desc',
+      },
+    });
+  }
+
+  async findOneSubmission(id: string, userId: string, userRole: string) {
+    // Build the filter dynamically
+    // If ADMIN: Search by ID only.
+    // If USER: Search by ID AND ensure it belongs to them.
+    const where = userRole === 'ADMIN' ? { id } : { id, userId };
+
+    const submission = await this.prisma.submission.findFirst({
+      where,
+      include: {
+        hackathon: true,
+        user: true,
+      },
+    });
+
+    if (!submission) {
+      throw new NotFoundException('Submission not found');
+    }
+
+    return submission;
   }
 }

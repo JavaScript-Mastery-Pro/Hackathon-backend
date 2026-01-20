@@ -9,7 +9,7 @@ export class MailService {
     to: string,
     userName: string,
     hackathonName: string,
-  ): Promise<void> {
+  ) {
     await this.mailerService.sendMail({
       to,
       subject: 'Welcome to the Hackathon!',
@@ -17,6 +17,22 @@ export class MailService {
       context: {
         userName,
         hackathonName,
+      },
+    });
+  }
+
+  async sendSubmissionProcessed(
+    to: string,
+    submissionTitle: string,
+    submissionId: string,
+  ) {
+    await this.mailerService.sendMail({
+      to,
+      subject: 'Submission Processed Successfully',
+      template: 'submission-processed',
+      context: {
+        title: submissionTitle,
+        submissionId,
       },
     });
   }

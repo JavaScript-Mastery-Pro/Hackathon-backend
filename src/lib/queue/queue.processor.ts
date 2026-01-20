@@ -5,6 +5,7 @@ import { Logger } from '@nestjs/common';
 import * as fsPromises from 'fs/promises';
 import * as path from 'path';
 import { SubmissionStatus } from '@/prisma/client';
+import { MailService } from '../mail/mail.service';
 
 interface SubmissionJobData {
   submissionId: string;
@@ -34,7 +35,10 @@ const getLanguageFromExt = (ext: string): string => {
 @Processor('submission')
 export class QueueProcessor extends WorkerHost {
   private readonly logger = new Logger(QueueProcessor.name);
-  constructor(private readonly prisma: PrismaService) {
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mailService: MailService,
+  ) {
     super();
   }
 
@@ -87,25 +91,29 @@ export class QueueProcessor extends WorkerHost {
           // Fallback for Docker/Cross-partition
           await fsPromises.copyFile(tempFilePath, finalPath);
           await fsPromises.unlink(tempFilePath);
-
-          // 4. Update Database
-          await this.prisma.submission.update({
-            where: { id: submissionId },
-            data: {
-              filePath: dbFilePath,
-              status: SubmissionStatus.COMPLETED,
-            },
-          });
-
-          // 5. Send Notification
-          this.logger.log(`Sending notification to ${userEmail}`);
-
-          this.logger.log(`Job ${job.id} completed successfully`);
-          return { success: true, submissionId };
         } else {
           throw error;
         }
       }
+
+      // 4. Update Database
+      await this.prisma.submission.update({
+        where: { id: submissionId },
+        data: {
+          filePath: dbFilePath,
+          status: SubmissionStatus.COMPLETED,
+        },
+      });
+
+      // 5. Send Notification
+      await this.mailService.sendSubmissionProcessed(
+        userEmail,
+        submission.title,
+        submissionId,
+      );
+
+      this.logger.log(`Job ${job.id} completed successfully`);
+      return { success: true, submissionId };
     } catch (error) {
       this.logger.error(`Error processing job ${job.id}`, error);
       throw error;
