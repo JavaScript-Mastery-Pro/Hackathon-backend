@@ -6,11 +6,12 @@ model Hackathon {
   endsAt      DateTime
   isActive    Boolean  @default(false)
 
-  createdAt             DateTime               @default(now())
-  updatedAt             DateTime               @updatedAt
-  authorId              String
-  author                User                   @relation(fields: [authorId], references: [id])
-  participants          HackathonParticipant[]
+  createdAt    DateTime               @default(now())
+  updatedAt    DateTime               @updatedAt
+  authorId     String
+  author       User                   @relation(fields: [authorId], references: [id])
+  participants HackathonParticipant[]
+  submissions  Submission[]
 
   @@map("hackathon")
 }

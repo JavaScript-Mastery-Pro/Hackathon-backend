@@ -9,6 +9,15 @@
 * 🟢 You can import this file directly.
 */
 
+export const SubmissionStatus = {
+  PROCESSING: 'PROCESSING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED'
+} as const
+
+export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]
+
+
 export const UserRole = {
   PARTICIPANT: 'PARTICIPANT',
   ADMIN: 'ADMIN'

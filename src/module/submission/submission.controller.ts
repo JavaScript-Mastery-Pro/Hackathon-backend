@@ -8,6 +8,6 @@ export class SubmissionController {
   @Post('test')
   // @AllowAnonymous()
   test() {
-    return this.submissionService.test();
+    // return this.submissionService.test();
   }
 }

@@ -53,6 +53,7 @@ export const AnyNull = runtime.AnyNull
 export const ModelName = {
   Hackathon: 'Hackathon',
   HackathonParticipant: 'HackathonParticipant',
+  Submission: 'Submission',
   User: 'User',
   Session: 'Session',
   Account: 'Account',
@@ -98,6 +99,20 @@ export const HackathonParticipantScalarFieldEnum = {
 } as const
 
 export type HackathonParticipantScalarFieldEnum = (typeof HackathonParticipantScalarFieldEnum)[keyof typeof HackathonParticipantScalarFieldEnum]
+
+
+export const SubmissionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  hackathonId: 'hackathonId',
+  title: 'title',
+  description: 'description',
+  filePath: 'filePath',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
 
 
 export const UserScalarFieldEnum = {
