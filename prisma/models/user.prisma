@@ -18,6 +18,7 @@ model User {
   accounts              Account[]
   hackathons            Hackathon[]
   hackathonParticipants HackathonParticipant[]
+  submissions           Submission[]
 
   @@unique([email])
   @@map("user")

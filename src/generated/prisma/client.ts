@@ -48,6 +48,11 @@ export type Hackathon = Prisma.HackathonModel
  */
 export type HackathonParticipant = Prisma.HackathonParticipantModel
 /**
+ * Model Submission
+ * 
+ */
+export type Submission = Prisma.SubmissionModel
+/**
  * Model User
  * 
  */
