@@ -12,6 +12,7 @@ import { MailModule } from './lib/mail/mail.module';
 import { BullmqModule } from './lib/bullmq/bullmq.module';
 import { QueueModule } from './lib/queue/queue.module';
 import { SubmissionModule } from './module/submission/submission.module';
+import { ArcjetSecurityModule } from './lib/security/arcjet.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { SubmissionModule } from './module/submission/submission.module';
     BullmqModule,
     QueueModule,
     SubmissionModule,
+    ArcjetSecurityModule,
   ],
   controllers: [AppController],
   providers: [AppService, MailService],
