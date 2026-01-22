@@ -12,11 +12,11 @@
 - 🚀 [Quick Start](#quick-start)
 - 🔧 [Environment Variables](#environment-variables)
 
-## 📖 Introduction
+<h2 id="introduction">📖 Introduction</h2>
 
 Hackathon Backend is a scalable API built with NestJS for managing hackathons. It offers user authentication, hackathon CRUD operations, project submissions with file uploads, asynchronous processing, and email notifications, all secured with modern technologies.
 
-## 🛠️ Tech Stack
+<h2 id="tech-stack">🛠️ Tech Stack</h2>
 
 - **[NestJS](https://nestjs.com/)** - A progressive Node.js framework for building efficient, reliable and scalable server-side applications.
 - **[Prisma](https://www.prisma.io/)** - Next-generation ORM for TypeScript & Node.js.
@@ -26,7 +26,7 @@ Hackathon Backend is a scalable API built with NestJS for managing hackathons. I
 - **[Arcjet](https://arcjet.com/)** - Security layer for your applications.
 - **[Nodemailer](https://nodemailer.com/)** - Send emails from Node.js.
 
-## ✨ Features
+<h2 id="features">✨ Features</h2>
 
 - 🔐 **Authentication** (`/api/auth`): User registration, login, and role-based access control
 - 🏆 **Hackathon Management** (`/hackathon`): CRUD operations for hackathons and participant registration
@@ -34,7 +34,7 @@ Hackathon Backend is a scalable API built with NestJS for managing hackathons. I
 - 📧 **Email Notifications**: Automated emails for hackathon events and submissions
 - 🛡️ **Security**: Arcjet integration for threat protection and rate limiting
 
-## 🚀 Quick Start
+<h2 id="quick-start">🚀 Quick Start</h2>
 
 ### Prerequisites
 
@@ -77,7 +77,7 @@ Hackathon Backend is a scalable API built with NestJS for managing hackathons. I
 
 The API will be available at `http://localhost:8080`.
 
-## 🔧 Environment Variables
+<h2 id="environment-variables">🔧 Environment Variables</h2>
 
 Create a `.env` file in the root directory and configure the following variables:
 
