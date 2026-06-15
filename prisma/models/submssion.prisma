@@ -1,7 +1,7 @@
 enum SubmissionStatus {
-  PROCESSING
-  COMPLETED
-  FAILED
+  UNDER_REVIEW
+  ACCEPTED
+  REJECTED
 }
 
 model Submission {
@@ -11,7 +11,7 @@ model Submission {
   title       String
   description String?
   filePath    String
-  status      SubmissionStatus @default(PROCESSING)
+  status      SubmissionStatus @default(UNDER_REVIEW)
   createdAt   DateTime         @default(now())
 
   user      User      @relation(fields: [userId], references: [id])

@@ -10,9 +10,9 @@
 */
 
 export const SubmissionStatus = {
-  PROCESSING: 'PROCESSING',
-  COMPLETED: 'COMPLETED',
-  FAILED: 'FAILED'
+  UNDER_REVIEW: 'UNDER_REVIEW',
+  ACCEPTED: 'ACCEPTED',
+  REJECTED: 'REJECTED'
 } as const
 
 export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]

@@ -1,19 +1,19 @@
-import { Controller, Get, Param, UseGuards } from '@nestjs/common';
-import { AuthGuard, Session } from '@thallesp/nestjs-better-auth';
-import type { UserSession } from '@thallesp/nestjs-better-auth';
+import { Controller, Get, Param, Request, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { ResponseMessage } from '@/common/decorators/response-message.decorator';
+import type { Request as ExpressRequest } from 'express';
 
 @Controller('user')
-@UseGuards(AuthGuard, RolesGuard)
+@UseGuards(JwtAuthGuard, RolesGuard)
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get('me')
-  me(@Session() session: UserSession) {
-    return { user: session.user };
+  me(@Request() req: ExpressRequest) {
+    return { user: req.user };
   }
 
   @Get()

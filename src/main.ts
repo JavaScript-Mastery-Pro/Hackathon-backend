@@ -4,9 +4,7 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, {
-    bodyParser: false,
-  });
+  const app = await NestFactory.create(AppModule);
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
     credentials: true,

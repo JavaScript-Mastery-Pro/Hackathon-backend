@@ -59,3 +59,10 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 # Uploads directory
 uploads/
+
+.agents/
+.vscode/
+.claude/
+CLAUDE.md
+memory.md
+skills-lock.json

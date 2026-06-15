@@ -26,27 +26,25 @@ export class SubmissionService {
     createSubmissionDto: CreateSubmissionDto,
   ) {
     const participant = await this.prisma.hackathonParticipant.findUnique({
-      where: {
-        hackathonId_userId: { hackathonId, userId },
-      },
-      include: {
-        hackathon: true,
-        user: true, // We need this for the email later
-      },
+      where: { hackathonId_userId: { hackathonId, userId } },
+      include: { hackathon: true, user: true },
     });
 
-    // 2. Logic Checks
     if (!participant) {
       throw new BadRequestException(
         'You must join the hackathon before submitting',
       );
     }
 
-    if (!participant.hackathon.isActive) {
+    if (!participant.hackathon.isActive || participant.hackathon.endsAt < new Date()) {
       throw new BadRequestException(
         'This hackathon is not accepting submissions',
       );
     }
+
+    const ext = path.extname(file.originalname).toLowerCase().slice(1);
+    const isZip = ext === 'zip' || ext === 'pdf';
+    const category = isZip ? 'projects' : getLanguageFromExt(ext);
 
     const newSubmission = await this.prisma.submission.create({
       data: {
@@ -54,86 +52,82 @@ export class SubmissionService {
         description: createSubmissionDto.description,
         hackathonId,
         userId,
-        filePath: '', // Will be updated by the worker later if needed
-        status: SubmissionStatus.PROCESSING,
+        filePath: '',
+        status: SubmissionStatus.UNDER_REVIEW,
       },
     });
 
-    const tempDir = path.join(process.cwd(), 'uploads', 'temp');
-    const tempFilePath = path.join(tempDir, `${newSubmission.id}.tmp`);
+    const finalDir = path.join(process.cwd(), 'uploads', hackathonId, category);
+    const finalPath = path.join(finalDir, `${newSubmission.id}.${ext}`);
+    const dbFilePath = `${hackathonId}/${category}/${newSubmission.id}.${ext}`;
 
     try {
-      // Ensure directory exists (recursive: true handles if it already exists)
-      await fs.mkdir(tempDir, { recursive: true });
+      await fs.mkdir(finalDir, { recursive: true });
+      await fs.writeFile(finalPath, file.buffer);
 
-      // Write file asynchronously so we don't block the server
-      await fs.writeFile(tempFilePath, file.buffer);
+      await this.prisma.submission.update({
+        where: { id: newSubmission.id },
+        data: { filePath: dbFilePath },
+      });
 
-      // 5. Add to Queue
       await this.submissionQueue.add(
-        'process-submission',
+        'send-submission-email',
         {
+          userEmail: participant.user.email,
+          submissionTitle: newSubmission.title,
           submissionId: newSubmission.id,
-          tempFilePath,
-          originalFilename: file.originalname,
-          userEmail: participant.user.email, // Accessed from the single query above
-          hackathonId,
         },
-        {
-          attempts: 3,
-          backoff: { type: 'exponential', delay: 2000 },
-          removeOnComplete: 10,
-          removeOnFail: 5,
-        },
+        { attempts: 3, backoff: { type: 'exponential', delay: 2000 }, removeOnComplete: 10, removeOnFail: 5 },
       );
     } catch (error: unknown) {
-      // 6. Cleanup on Failure (Best Practice)
-      // If writing the file or adding to queue fails, we should delete the DB record
-      // so the user can try again without seeing a stuck "Processing" submission.
       await this.prisma.submission.delete({ where: { id: newSubmission.id } });
-
-      // Attempt to clean up the file if it was partially written
-      await fs.unlink(tempFilePath).catch(() => {});
-
+      await fs.unlink(finalPath).catch(() => {});
       throw new InternalServerErrorException(
         error instanceof Error ? error.message : 'Failed to process submission',
       );
     }
+
     return newSubmission;
   }
 
   async findAllSubmissions(userId: string, userRole: string) {
     const where = userRole === 'ADMIN' ? {} : { userId };
-
     return this.prisma.submission.findMany({
       where,
-      include: {
-        hackathon: true,
-      },
-      orderBy: {
-        createdAt: 'desc',
-      },
+      include: { hackathon: true },
+      orderBy: { createdAt: 'desc' },
     });
   }
 
   async findOneSubmission(id: string, userId: string, userRole: string) {
-    // Build the filter dynamically
-    // If ADMIN: Search by ID only.
-    // If USER: Search by ID AND ensure it belongs to them.
     const where = userRole === 'ADMIN' ? { id } : { id, userId };
-
     const submission = await this.prisma.submission.findFirst({
       where,
-      include: {
-        hackathon: true,
-        user: true,
-      },
+      include: { hackathon: true, user: true },
     });
-
     if (!submission) {
       throw new NotFoundException('Submission not found');
     }
-
     return submission;
   }
+
+  async updateStatus(id: string, status: SubmissionStatus) {
+    const submission = await this.prisma.submission.findUnique({ where: { id } });
+    if (!submission) {
+      throw new NotFoundException('Submission not found');
+    }
+    return this.prisma.submission.update({
+      where: { id },
+      data: { status },
+    });
+  }
 }
+
+const getLanguageFromExt = (ext: string): string => {
+  const map: Record<string, string> = {
+    js: 'javascript', ts: 'typescript', py: 'python',
+    cpp: 'cpp', c: 'c', java: 'java', php: 'php',
+    rb: 'ruby', go: 'go', rs: 'rust',
+  };
+  return map[ext] || 'others';
+};

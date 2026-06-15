@@ -5,6 +5,7 @@ import {
   HttpStatus,
   Param,
   ParseFilePipeBuilder,
+  Patch,
   Post,
   Request,
   UploadedFile,
@@ -13,14 +14,17 @@ import {
 } from '@nestjs/common';
 import { SubmissionService } from './submission.service';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { AuthGuard } from '@thallesp/nestjs-better-auth';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
+import { RolesGuard } from '@/common/guards/roles.guard';
+import { Roles } from '@/common/decorators/roles.decorator';
 import type { Request as ExpressRequest } from 'express';
 import { CreateSubmissionDto } from './dto/create-submission.dto';
 import { SubmissionFileValidator } from '@/common/validators/file-type.validator';
 import { ResponseMessage } from '@/common/decorators/response-message.decorator';
+import { SubmissionStatus } from '@/prisma/enums';
 
 @Controller('submission')
-@UseGuards(AuthGuard)
+@UseGuards(JwtAuthGuard)
 export class SubmissionController {
   constructor(private readonly submissionService: SubmissionService) {}
 
@@ -59,7 +63,17 @@ export class SubmissionController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: ExpressRequest) {
-    const user = req.user!;
-    return this.submissionService.findOneSubmission(id, user.id, user.role);
+    return this.submissionService.findOneSubmission(id, req.user!.id, req.user!.role);
+  }
+
+  @Patch(':id/status')
+  @UseGuards(RolesGuard)
+  @Roles('ADMIN')
+  @ResponseMessage('Submission status updated')
+  updateStatus(
+    @Param('id') id: string,
+    @Body('status') status: SubmissionStatus,
+  ) {
+    return this.submissionService.updateStatus(id, status);
   }
 }

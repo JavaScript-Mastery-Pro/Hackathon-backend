@@ -12,19 +12,19 @@ import {
 import { HackathonService } from './hackathon.service';
 import { CreateHackathonDto } from './dto/create-hackathon.dto';
 import { UpdateHackathonDto } from './dto/update-hackathon.dto';
-import { AuthGuard } from '@thallesp/nestjs-better-auth';
+import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import type { Request as ExpressRequest } from 'express';
 import { ResponseMessage } from '@/common/decorators/response-message.decorator';
 
 @Controller('hackathon')
-@UseGuards(AuthGuard, RolesGuard)
 export class HackathonController {
   constructor(private readonly hackathonService: HackathonService) {}
 
   @Post('create')
-  // @Roles('ADMIN')
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('ADMIN')
   @ResponseMessage('Hackathon created successfully')
   createHackathon(
     @Body() createHackathonDto: CreateHackathonDto,
@@ -37,7 +37,6 @@ export class HackathonController {
   }
 
   @Get()
-  // @Roles('ADMIN')
   findAll() {
     return this.hackathonService.findAllHackathons();
   }
@@ -47,7 +46,13 @@ export class HackathonController {
     return this.hackathonService.findOneHackathon(id);
   }
 
+  @Get(':id/participants')
+  getParticipants(@Param('id') id: string) {
+    return this.hackathonService.getParticipants(id);
+  }
+
   @Patch('update/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ResponseMessage('Hackathon updated successfully')
   updateHackathon(
@@ -58,6 +63,7 @@ export class HackathonController {
   }
 
   @Delete('remove/:id')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('ADMIN')
   @ResponseMessage('Hackathon deleted successfully')
   removeHackathon(@Param('id') id: string) {
@@ -65,9 +71,10 @@ export class HackathonController {
   }
 
   @Post(':id/join')
+  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('PARTICIPANT')
-  @ResponseMessage('Joined hackathon successfully')
-  async joinHackathon(@Param('id') id: string, @Request() req: ExpressRequest) {
+  @ResponseMessage('You have successfully joined the hackathon')
+  joinHackathon(@Param('id') id: string, @Request() req: ExpressRequest) {
     return this.hackathonService.joinHackathon(id, req.user!.id);
   }
 }
