@@ -63,7 +63,11 @@ export class SubmissionController {
 
   @Get(':id')
   findOne(@Param('id') id: string, @Request() req: ExpressRequest) {
-    return this.submissionService.findOneSubmission(id, req.user!.id, req.user!.role);
+    return this.submissionService.findOneSubmission(
+      id,
+      req.user!.id,
+      req.user!.role,
+    );
   }
 
   @Patch(':id/status')
