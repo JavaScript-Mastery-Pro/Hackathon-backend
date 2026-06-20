@@ -12,8 +12,10 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
+import { slidingWindow } from '@arcjet/nest';
 import { SubmissionService } from './submission.service';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { ArcjetRules } from '@/common/decorators/arcjet-rules.decorator';
 import { JwtAuthGuard } from '@/common/guards/jwt-auth.guard';
 import { RolesGuard } from '@/common/guards/roles.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
@@ -29,6 +31,8 @@ export class SubmissionController {
   constructor(private readonly submissionService: SubmissionService) {}
 
   @Post(':hackathonId/submit')
+  // File upload + queued email processing is expensive — cap submissions per IP.
+  @ArcjetRules(slidingWindow({ mode: 'LIVE', interval: '1m', max: 20 }))
   @UseInterceptors(FileInterceptor('file'))
   @ResponseMessage('Submission received and is being processed.')
   submission(
