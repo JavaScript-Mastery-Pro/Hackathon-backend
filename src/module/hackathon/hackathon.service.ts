@@ -1,24 +1,20 @@
 import {
   BadRequestException,
   Injectable,
-  Logger,
   NotFoundException,
 } from '@nestjs/common';
 import { CreateHackathonDto } from './dto/create-hackathon.dto';
 import { UpdateHackathonDto } from './dto/update-hackathon.dto';
 import { PrismaService } from '@/lib/database/prisma.service';
-import { MailService } from '@/lib/mail/mail.service';
 
 @Injectable()
 export class HackathonService {
-  private readonly logger = new Logger(HackathonService.name);
+  constructor(private prisma: PrismaService) {}
 
-  constructor(
-    private prisma: PrismaService,
-    private mailService: MailService,
-  ) {}
-
-  async createHackathon(createHackathonDto: CreateHackathonDto, authorId: string) {
+  async createHackathon(
+    createHackathonDto: CreateHackathonDto,
+    authorId: string,
+  ) {
     const user = await this.prisma.user.findUnique({ where: { id: authorId } });
     if (!user) throw new NotFoundException('User not found');
 
@@ -92,21 +88,12 @@ export class HackathonService {
     const alreadyJoined = await this.prisma.hackathonParticipant.findUnique({
       where: { hackathonId_userId: { hackathonId, userId } },
     });
-    if (alreadyJoined) throw new BadRequestException('Already joined this hackathon');
-
-    const user = await this.prisma.user.findUnique({ where: { id: userId } });
-    if (!user) throw new NotFoundException('User not found');
+    if (alreadyJoined)
+      throw new BadRequestException('Already joined this hackathon');
 
     const participant = await this.prisma.hackathonParticipant.create({
       data: { hackathonId, userId },
     });
-
-    await this.mailService.sendHackathonJoinConfirmation(
-      user.email,
-      user.name,
-      hackathon.name,
-    );
-    this.logger.log(`Join confirmation email sent to ${user.email}`);
 
     return participant;
   }

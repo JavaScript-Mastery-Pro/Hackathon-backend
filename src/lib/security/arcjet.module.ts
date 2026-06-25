@@ -1,5 +1,12 @@
 import { Module } from '@nestjs/common';
-import { ArcjetModule, detectBot, shield, slidingWindow } from '@arcjet/nest';
+import { APP_GUARD } from '@nestjs/core';
+import {
+  ArcjetGuard,
+  ArcjetModule,
+  detectBot,
+  shield,
+  slidingWindow,
+} from '@arcjet/nest';
 
 @Module({
   imports: [
@@ -26,5 +33,10 @@ import { ArcjetModule, detectBot, shield, slidingWindow } from '@arcjet/nest';
       ],
     }),
   ],
+  // Register ArcjetGuard globally so the rules above run on every matched
+  // route (it's route-scoped via canActivate, not Express middleware, so it
+  // never fires on static assets). Layer extra per-route rules where needed
+  // with the `@WithArcjetRules([...])` decorator on a controller or handler.
+  providers: [{ provide: APP_GUARD, useClass: ArcjetGuard }],
 })
 export class ArcjetSecurityModule {}

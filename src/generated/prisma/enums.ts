@@ -9,15 +9,6 @@
 * 🟢 You can import this file directly.
 */
 
-export const SubmissionStatus = {
-  UNDER_REVIEW: 'UNDER_REVIEW',
-  ACCEPTED: 'ACCEPTED',
-  REJECTED: 'REJECTED'
-} as const
-
-export type SubmissionStatus = (typeof SubmissionStatus)[keyof typeof SubmissionStatus]
-
-
 export const UserRole = {
   PARTICIPANT: 'PARTICIPANT',
   ADMIN: 'ADMIN'

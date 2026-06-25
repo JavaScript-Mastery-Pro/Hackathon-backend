@@ -4,7 +4,10 @@ import { TransformInterceptor } from './common/interceptors/transform.intercepto
 import { BadRequestException, ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // Better Auth handles body parsing for its own routes; the nestjs-better-auth
+  // module parses bodies for everything else. Disable Nest's built-in parser so
+  // the two don't conflict (required by @thallesp/nestjs-better-auth).
+  const app = await NestFactory.create(AppModule, { bodyParser: false });
   app.enableCors({
     origin: [process.env.FRONTEND_URL],
     credentials: true,

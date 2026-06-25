@@ -27,8 +27,8 @@ export * from "./enums.js"
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Hackathons
- * const hackathons = await prisma.hackathon.findMany()
+ * // Fetch zero or more Sessions
+ * const sessions = await prisma.session.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -37,6 +37,21 @@ export const PrismaClient = $Class.getPrismaClientClass()
 export type PrismaClient<LogOpts extends Prisma.LogLevel = never, OmitOpts extends Prisma.PrismaClientOptions["omit"] = Prisma.PrismaClientOptions["omit"], ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = $Class.PrismaClient<LogOpts, OmitOpts, ExtArgs>
 export { Prisma }
 
+/**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel
 /**
  * Model Hackathon
  * 
@@ -47,11 +62,6 @@ export type Hackathon = Prisma.HackathonModel
  * 
  */
 export type HackathonParticipant = Prisma.HackathonParticipantModel
-/**
- * Model Submission
- * 
- */
-export type Submission = Prisma.SubmissionModel
 /**
  * Model User
  * 

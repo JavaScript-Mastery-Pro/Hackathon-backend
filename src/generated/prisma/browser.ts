@@ -18,6 +18,21 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
+ * Model Session
+ * 
+ */
+export type Session = Prisma.SessionModel
+/**
+ * Model Account
+ * 
+ */
+export type Account = Prisma.AccountModel
+/**
+ * Model Verification
+ * 
+ */
+export type Verification = Prisma.VerificationModel
+/**
  * Model Hackathon
  * 
  */
@@ -27,11 +42,6 @@ export type Hackathon = Prisma.HackathonModel
  * 
  */
 export type HackathonParticipant = Prisma.HackathonParticipantModel
-/**
- * Model Submission
- * 
- */
-export type Submission = Prisma.SubmissionModel
 /**
  * Model User
  * 

@@ -8,16 +8,18 @@ enum UserRole {
 model User {
   id                    String                 @id @default(cuid())
   name                  String
-  email                 String
-  password              String
+  email                 String                 @unique
+  emailVerified         Boolean                @default(false)
   role                  UserRole               @default(PARTICIPANT)
   image                 String?
   createdAt             DateTime               @default(now())
   updatedAt             DateTime               @updatedAt
+  // Better Auth relations
+  sessions              Session[]
+  accounts              Account[]
+  // App relations
   hackathons            Hackathon[]
   hackathonParticipants HackathonParticipant[]
-  submissions           Submission[]
 
-  @@unique([email])
   @@map("user")
 }
