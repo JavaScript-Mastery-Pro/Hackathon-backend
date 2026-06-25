@@ -51,13 +51,12 @@ export const AnyNull = runtime.AnyNull
 
 
 export const ModelName = {
-  Hackathon: 'Hackathon',
-  HackathonParticipant: 'HackathonParticipant',
-  Submission: 'Submission',
-  User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Hackathon: 'Hackathon',
+  HackathonParticipant: 'HackathonParticipant',
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -76,68 +75,15 @@ export const TransactionIsolationLevel = {
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const HackathonScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  startsAt: 'startsAt',
-  endsAt: 'endsAt',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  authorId: 'authorId'
-} as const
-
-export type HackathonScalarFieldEnum = (typeof HackathonScalarFieldEnum)[keyof typeof HackathonScalarFieldEnum]
-
-
-export const HackathonParticipantScalarFieldEnum = {
-  id: 'id',
-  hackathonId: 'hackathonId',
-  userId: 'userId',
-  joinedAt: 'joinedAt'
-} as const
-
-export type HackathonParticipantScalarFieldEnum = (typeof HackathonParticipantScalarFieldEnum)[keyof typeof HackathonParticipantScalarFieldEnum]
-
-
-export const SubmissionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  hackathonId: 'hackathonId',
-  title: 'title',
-  description: 'description',
-  filePath: 'filePath',
-  status: 'status',
-  createdAt: 'createdAt'
-} as const
-
-export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
-
-
-export const UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  role: 'role',
-  emailVerified: 'emailVerified',
-  image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
 export const SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
   token: 'token',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  userId: 'userId'
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -172,6 +118,45 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const HackathonScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+} as const
+
+export type HackathonScalarFieldEnum = (typeof HackathonScalarFieldEnum)[keyof typeof HackathonScalarFieldEnum]
+
+
+export const HackathonParticipantScalarFieldEnum = {
+  id: 'id',
+  hackathonId: 'hackathonId',
+  userId: 'userId',
+  joinedAt: 'joinedAt'
+} as const
+
+export type HackathonParticipantScalarFieldEnum = (typeof HackathonParticipantScalarFieldEnum)[keyof typeof HackathonParticipantScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  role: 'role',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {

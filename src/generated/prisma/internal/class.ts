@@ -20,7 +20,7 @@ const config: runtime.GetPrismaClientConfig = {
   "clientVersion": "7.2.0",
   "engineVersion": "0c8ef2ce45c83248ab3df073180d5eda9e8be7a3",
   "activeProvider": "postgresql",
-  "inlineSchema": "model Hackathon {\n  id          String   @id @default(cuid())\n  name        String\n  description String?\n  startsAt    DateTime\n  endsAt      DateTime\n  isActive    Boolean  @default(false)\n\n  createdAt    DateTime               @default(now())\n  updatedAt    DateTime               @updatedAt\n  authorId     String\n  author       User                   @relation(fields: [authorId], references: [id])\n  participants HackathonParticipant[]\n  submissions  Submission[]\n\n  @@map(\"hackathon\")\n}\n\nmodel HackathonParticipant {\n  id          String   @id @default(cuid())\n  hackathonId String   @map(\"hackathon_id\")\n  userId      String   @map(\"user_id\")\n  joinedAt    DateTime @default(now()) @map(\"joined_at\")\n\n  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)\n  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([hackathonId, userId])\n  @@map(\"hackathon_participant\")\n}\n\nenum SubmissionStatus {\n  PROCESSING\n  COMPLETED\n  FAILED\n}\n\nmodel Submission {\n  id          String           @id @default(cuid())\n  userId      String\n  hackathonId String\n  title       String\n  description String?\n  filePath    String\n  status      SubmissionStatus @default(PROCESSING)\n  createdAt   DateTime         @default(now())\n\n  user      User      @relation(fields: [userId], references: [id])\n  hackathon Hackathon @relation(fields: [hackathonId], references: [id])\n\n  @@map(\"submission\")\n}\n\nenum UserRole {\n  PARTICIPANT\n  ADMIN\n\n  @@map(\"user_role\")\n}\n\nmodel User {\n  id                    String                 @id @default(cuid())\n  name                  String\n  email                 String\n  role                  UserRole               @default(PARTICIPANT)\n  emailVerified         Boolean                @default(false)\n  image                 String?\n  createdAt             DateTime               @default(now())\n  updatedAt             DateTime               @updatedAt\n  sessions              Session[]\n  accounts              Account[]\n  hackathons            Hackathon[]\n  hackathonParticipants HackathonParticipant[]\n  submissions           Submission[]\n\n  @@unique([email])\n  @@map(\"user\")\n}\n\nmodel Session {\n  id        String   @id\n  expiresAt DateTime\n  token     String\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([token])\n  @@index([userId])\n  @@map(\"session\")\n}\n\nmodel Account {\n  id                    String    @id\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@index([userId])\n  @@map(\"account\")\n}\n\nmodel Verification {\n  id         String   @id\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@index([identifier])\n  @@map(\"verification\")\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
+  "inlineSchema": "// Better Auth core models. Hand-written to match Better Auth's expected schema\n// (https://better-auth.com/docs/concepts/database). The credential password is\n// stored on Account (provider \"credential\"), NOT on User.\n\nmodel Session {\n  id        String   @id @default(cuid())\n  expiresAt DateTime\n  token     String   @unique\n  ipAddress String?\n  userAgent String?\n  userId    String\n  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  @@map(\"session\")\n}\n\nmodel Account {\n  id                    String    @id @default(cuid())\n  accountId             String\n  providerId            String\n  userId                String\n  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n  accessToken           String?\n  refreshToken          String?\n  idToken               String?\n  accessTokenExpiresAt  DateTime?\n  refreshTokenExpiresAt DateTime?\n  scope                 String?\n  password              String?\n  createdAt             DateTime  @default(now())\n  updatedAt             DateTime  @updatedAt\n\n  @@map(\"account\")\n}\n\nmodel Verification {\n  id         String   @id @default(cuid())\n  identifier String\n  value      String\n  expiresAt  DateTime\n  createdAt  DateTime @default(now())\n  updatedAt  DateTime @updatedAt\n\n  @@map(\"verification\")\n}\n\nmodel Hackathon {\n  id          String   @id @default(cuid())\n  name        String\n  description String?\n  startsAt    DateTime\n  endsAt      DateTime\n  isActive    Boolean  @default(false)\n\n  createdAt    DateTime               @default(now())\n  updatedAt    DateTime               @updatedAt\n  authorId     String\n  author       User                   @relation(fields: [authorId], references: [id])\n  participants HackathonParticipant[]\n\n  @@map(\"hackathon\")\n}\n\nmodel HackathonParticipant {\n  id          String   @id @default(cuid())\n  hackathonId String   @map(\"hackathon_id\")\n  userId      String   @map(\"user_id\")\n  joinedAt    DateTime @default(now()) @map(\"joined_at\")\n\n  hackathon Hackathon @relation(fields: [hackathonId], references: [id], onDelete: Cascade)\n  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([hackathonId, userId])\n  @@map(\"hackathon_participant\")\n}\n\nenum UserRole {\n  PARTICIPANT\n  ADMIN\n\n  @@map(\"user_role\")\n}\n\nmodel User {\n  id                    String                 @id @default(cuid())\n  name                  String\n  email                 String                 @unique\n  emailVerified         Boolean                @default(false)\n  role                  UserRole               @default(PARTICIPANT)\n  image                 String?\n  createdAt             DateTime               @default(now())\n  updatedAt             DateTime               @updatedAt\n  // Better Auth relations\n  sessions              Session[]\n  accounts              Account[]\n  // App relations\n  hackathons            Hackathon[]\n  hackathonParticipants HackathonParticipant[]\n\n  @@map(\"user\")\n}\n\ngenerator client {\n  provider     = \"prisma-client\"\n  output       = \"../src/generated/prisma\"\n  moduleFormat = \"cjs\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n}\n",
   "runtimeDataModel": {
     "models": {},
     "enums": {},
@@ -28,7 +28,7 @@ const config: runtime.GetPrismaClientConfig = {
   }
 }
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Hackathon\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startsAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endsAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"authorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"author\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"HackathonToUser\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"HackathonParticipant\",\"relationName\":\"HackathonToHackathonParticipant\"},{\"name\":\"submissions\",\"kind\":\"object\",\"type\":\"Submission\",\"relationName\":\"HackathonToSubmission\"}],\"dbName\":\"hackathon\"},\"HackathonParticipant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hackathonId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"hackathon_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"joined_at\"},{\"name\":\"hackathon\",\"kind\":\"object\",\"type\":\"Hackathon\",\"relationName\":\"HackathonToHackathonParticipant\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"HackathonParticipantToUser\"}],\"dbName\":\"hackathon_participant\"},\"Submission\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hackathonId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"title\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"filePath\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"SubmissionStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SubmissionToUser\"},{\"name\":\"hackathon\",\"kind\":\"object\",\"type\":\"Hackathon\",\"relationName\":\"HackathonToSubmission\"}],\"dbName\":\"submission\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"hackathons\",\"kind\":\"object\",\"type\":\"Hackathon\",\"relationName\":\"HackathonToUser\"},{\"name\":\"hackathonParticipants\",\"kind\":\"object\",\"type\":\"HackathonParticipant\",\"relationName\":\"HackathonParticipantToUser\"},{\"name\":\"submissions\",\"kind\":\"object\",\"type\":\"Submission\",\"relationName\":\"SubmissionToUser\"}],\"dbName\":\"user\"},\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"ipAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"}],\"dbName\":\"session\"},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"},{\"name\":\"accessToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refreshTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"account\"},\"Verification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"verification\"}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Session\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"token\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"ipAddress\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userAgent\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"SessionToUser\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"session\"},\"Account\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accountId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"providerId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"AccountToUser\"},{\"name\":\"accessToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"refreshToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"idToken\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"accessTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"refreshTokenExpiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"scope\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"account\"},\"Verification\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"identifier\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"value\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"expiresAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":\"verification\"},\"Hackathon\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"description\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"startsAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"endsAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"isActive\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"authorId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"author\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"HackathonToUser\"},{\"name\":\"participants\",\"kind\":\"object\",\"type\":\"HackathonParticipant\",\"relationName\":\"HackathonToHackathonParticipant\"}],\"dbName\":\"hackathon\"},\"HackathonParticipant\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"hackathonId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"hackathon_id\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\",\"dbName\":\"user_id\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\",\"dbName\":\"joined_at\"},{\"name\":\"hackathon\",\"kind\":\"object\",\"type\":\"Hackathon\",\"relationName\":\"HackathonToHackathonParticipant\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"User\",\"relationName\":\"HackathonParticipantToUser\"}],\"dbName\":\"hackathon_participant\"},\"User\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"emailVerified\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"UserRole\"},{\"name\":\"image\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"sessions\",\"kind\":\"object\",\"type\":\"Session\",\"relationName\":\"SessionToUser\"},{\"name\":\"accounts\",\"kind\":\"object\",\"type\":\"Account\",\"relationName\":\"AccountToUser\"},{\"name\":\"hackathons\",\"kind\":\"object\",\"type\":\"Hackathon\",\"relationName\":\"HackathonToUser\"},{\"name\":\"hackathonParticipants\",\"kind\":\"object\",\"type\":\"HackathonParticipant\",\"relationName\":\"HackathonParticipantToUser\"}],\"dbName\":\"user\"}},\"enums\":{},\"types\":{}}")
 
 async function decodeBase64AsWasm(wasmBase64: string): Promise<WebAssembly.Module> {
   const { Buffer } = await import('node:buffer')
@@ -58,8 +58,8 @@ export interface PrismaClientConstructor {
    * @example
    * ```
    * const prisma = new PrismaClient()
-   * // Fetch zero or more Hackathons
-   * const hackathons = await prisma.hackathon.findMany()
+   * // Fetch zero or more Sessions
+   * const sessions = await prisma.session.findMany()
    * ```
    * 
    * Read more in our [docs](https://pris.ly/d/client).
@@ -80,8 +80,8 @@ export interface PrismaClientConstructor {
  * @example
  * ```
  * const prisma = new PrismaClient()
- * // Fetch zero or more Hackathons
- * const hackathons = await prisma.hackathon.findMany()
+ * // Fetch zero or more Sessions
+ * const sessions = await prisma.session.findMany()
  * ```
  * 
  * Read more in our [docs](https://pris.ly/d/client).
@@ -175,46 +175,6 @@ export interface PrismaClient<
   }>>
 
       /**
-   * `prisma.hackathon`: Exposes CRUD operations for the **Hackathon** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Hackathons
-    * const hackathons = await prisma.hackathon.findMany()
-    * ```
-    */
-  get hackathon(): Prisma.HackathonDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.hackathonParticipant`: Exposes CRUD operations for the **HackathonParticipant** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more HackathonParticipants
-    * const hackathonParticipants = await prisma.hackathonParticipant.findMany()
-    * ```
-    */
-  get hackathonParticipant(): Prisma.HackathonParticipantDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.submission`: Exposes CRUD operations for the **Submission** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Submissions
-    * const submissions = await prisma.submission.findMany()
-    * ```
-    */
-  get submission(): Prisma.SubmissionDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
-   * `prisma.user`: Exposes CRUD operations for the **User** model.
-    * Example usage:
-    * ```ts
-    * // Fetch zero or more Users
-    * const users = await prisma.user.findMany()
-    * ```
-    */
-  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
-
-  /**
    * `prisma.session`: Exposes CRUD operations for the **Session** model.
     * Example usage:
     * ```ts
@@ -243,6 +203,36 @@ export interface PrismaClient<
     * ```
     */
   get verification(): Prisma.VerificationDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.hackathon`: Exposes CRUD operations for the **Hackathon** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Hackathons
+    * const hackathons = await prisma.hackathon.findMany()
+    * ```
+    */
+  get hackathon(): Prisma.HackathonDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.hackathonParticipant`: Exposes CRUD operations for the **HackathonParticipant** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more HackathonParticipants
+    * const hackathonParticipants = await prisma.hackathonParticipant.findMany()
+    * ```
+    */
+  get hackathonParticipant(): Prisma.HackathonParticipantDelegate<ExtArgs, { omit: OmitOpts }>;
+
+  /**
+   * `prisma.user`: Exposes CRUD operations for the **User** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more Users
+    * const users = await prisma.user.findMany()
+    * ```
+    */
+  get user(): Prisma.UserDelegate<ExtArgs, { omit: OmitOpts }>;
 }
 
 export function getPrismaClientClass(): PrismaClientConstructor {

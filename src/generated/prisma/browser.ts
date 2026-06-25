@@ -18,26 +18,6 @@ export { Prisma }
 export * as $Enums from './enums.js'
 export * from './enums.js';
 /**
- * Model Hackathon
- * 
- */
-export type Hackathon = Prisma.HackathonModel
-/**
- * Model HackathonParticipant
- * 
- */
-export type HackathonParticipant = Prisma.HackathonParticipantModel
-/**
- * Model Submission
- * 
- */
-export type Submission = Prisma.SubmissionModel
-/**
- * Model User
- * 
- */
-export type User = Prisma.UserModel
-/**
  * Model Session
  * 
  */
@@ -52,3 +32,18 @@ export type Account = Prisma.AccountModel
  * 
  */
 export type Verification = Prisma.VerificationModel
+/**
+ * Model Hackathon
+ * 
+ */
+export type Hackathon = Prisma.HackathonModel
+/**
+ * Model HackathonParticipant
+ * 
+ */
+export type HackathonParticipant = Prisma.HackathonParticipantModel
+/**
+ * Model User
+ * 
+ */
+export type User = Prisma.UserModel

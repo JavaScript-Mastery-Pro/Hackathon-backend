@@ -1,12 +1,18 @@
-import { Request } from 'express';
-import type { Session } from 'better-auth';
-import type { User } from '@/prisma/client';
-
 declare global {
   namespace Express {
+    // Subset of Better Auth's user that our app reads. The guard from
+    // @thallesp/nestjs-better-auth attaches `req.user = session.user`.
+    interface User {
+      id: string;
+      email: string;
+      role: string;
+    }
+
     interface Request {
       user?: User;
-      session?: Session;
+      session?: unknown;
     }
   }
 }
+
+export {};

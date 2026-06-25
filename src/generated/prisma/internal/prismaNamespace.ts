@@ -384,13 +384,12 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 
 export const ModelName = {
-  Hackathon: 'Hackathon',
-  HackathonParticipant: 'HackathonParticipant',
-  Submission: 'Submission',
-  User: 'User',
   Session: 'Session',
   Account: 'Account',
-  Verification: 'Verification'
+  Verification: 'Verification',
+  Hackathon: 'Hackathon',
+  HackathonParticipant: 'HackathonParticipant',
+  User: 'User'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -406,306 +405,10 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "hackathon" | "hackathonParticipant" | "submission" | "user" | "session" | "account" | "verification"
+    modelProps: "session" | "account" | "verification" | "hackathon" | "hackathonParticipant" | "user"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
-    Hackathon: {
-      payload: Prisma.$HackathonPayload<ExtArgs>
-      fields: Prisma.HackathonFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.HackathonFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.HackathonFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        findFirst: {
-          args: Prisma.HackathonFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.HackathonFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        findMany: {
-          args: Prisma.HackathonFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
-        }
-        create: {
-          args: Prisma.HackathonCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        createMany: {
-          args: Prisma.HackathonCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.HackathonCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
-        }
-        delete: {
-          args: Prisma.HackathonDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        update: {
-          args: Prisma.HackathonUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        deleteMany: {
-          args: Prisma.HackathonDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.HackathonUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.HackathonUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
-        }
-        upsert: {
-          args: Prisma.HackathonUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
-        }
-        aggregate: {
-          args: Prisma.HackathonAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateHackathon>
-        }
-        groupBy: {
-          args: Prisma.HackathonGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.HackathonGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.HackathonCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.HackathonCountAggregateOutputType> | number
-        }
-      }
-    }
-    HackathonParticipant: {
-      payload: Prisma.$HackathonParticipantPayload<ExtArgs>
-      fields: Prisma.HackathonParticipantFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.HackathonParticipantFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.HackathonParticipantFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        findFirst: {
-          args: Prisma.HackathonParticipantFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.HackathonParticipantFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        findMany: {
-          args: Prisma.HackathonParticipantFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
-        }
-        create: {
-          args: Prisma.HackathonParticipantCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        createMany: {
-          args: Prisma.HackathonParticipantCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.HackathonParticipantCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
-        }
-        delete: {
-          args: Prisma.HackathonParticipantDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        update: {
-          args: Prisma.HackathonParticipantUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        deleteMany: {
-          args: Prisma.HackathonParticipantDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.HackathonParticipantUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.HackathonParticipantUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
-        }
-        upsert: {
-          args: Prisma.HackathonParticipantUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
-        }
-        aggregate: {
-          args: Prisma.HackathonParticipantAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateHackathonParticipant>
-        }
-        groupBy: {
-          args: Prisma.HackathonParticipantGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.HackathonParticipantGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.HackathonParticipantCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.HackathonParticipantCountAggregateOutputType> | number
-        }
-      }
-    }
-    Submission: {
-      payload: Prisma.$SubmissionPayload<ExtArgs>
-      fields: Prisma.SubmissionFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.SubmissionFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.SubmissionFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        findFirst: {
-          args: Prisma.SubmissionFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.SubmissionFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        findMany: {
-          args: Prisma.SubmissionFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>[]
-        }
-        create: {
-          args: Prisma.SubmissionCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        createMany: {
-          args: Prisma.SubmissionCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.SubmissionCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>[]
-        }
-        delete: {
-          args: Prisma.SubmissionDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        update: {
-          args: Prisma.SubmissionUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        deleteMany: {
-          args: Prisma.SubmissionDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.SubmissionUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.SubmissionUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>[]
-        }
-        upsert: {
-          args: Prisma.SubmissionUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$SubmissionPayload>
-        }
-        aggregate: {
-          args: Prisma.SubmissionAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateSubmission>
-        }
-        groupBy: {
-          args: Prisma.SubmissionGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SubmissionGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.SubmissionCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.SubmissionCountAggregateOutputType> | number
-        }
-      }
-    }
-    User: {
-      payload: Prisma.$UserPayload<ExtArgs>
-      fields: Prisma.UserFieldRefs
-      operations: {
-        findUnique: {
-          args: Prisma.UserFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        findFirst: {
-          args: Prisma.UserFindFirstArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
-        }
-        findFirstOrThrow: {
-          args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        findMany: {
-          args: Prisma.UserFindManyArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
-        }
-        create: {
-          args: Prisma.UserCreateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        createMany: {
-          args: Prisma.UserCreateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        createManyAndReturn: {
-          args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
-        }
-        delete: {
-          args: Prisma.UserDeleteArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        update: {
-          args: Prisma.UserUpdateArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        deleteMany: {
-          args: Prisma.UserDeleteManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateMany: {
-          args: Prisma.UserUpdateManyArgs<ExtArgs>
-          result: BatchPayload
-        }
-        updateManyAndReturn: {
-          args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
-        }
-        upsert: {
-          args: Prisma.UserUpsertArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
-        }
-        aggregate: {
-          args: Prisma.UserAggregateArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.AggregateUser>
-        }
-        groupBy: {
-          args: Prisma.UserGroupByArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserGroupByOutputType>[]
-        }
-        count: {
-          args: Prisma.UserCountArgs<ExtArgs>
-          result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
-        }
-      }
-    }
     Session: {
       payload: Prisma.$SessionPayload<ExtArgs>
       fields: Prisma.SessionFieldRefs
@@ -928,6 +631,228 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Hackathon: {
+      payload: Prisma.$HackathonPayload<ExtArgs>
+      fields: Prisma.HackathonFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HackathonFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HackathonFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        findFirst: {
+          args: Prisma.HackathonFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HackathonFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        findMany: {
+          args: Prisma.HackathonFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
+        }
+        create: {
+          args: Prisma.HackathonCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        createMany: {
+          args: Prisma.HackathonCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HackathonCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
+        }
+        delete: {
+          args: Prisma.HackathonDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        update: {
+          args: Prisma.HackathonUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        deleteMany: {
+          args: Prisma.HackathonDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HackathonUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HackathonUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>[]
+        }
+        upsert: {
+          args: Prisma.HackathonUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonPayload>
+        }
+        aggregate: {
+          args: Prisma.HackathonAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHackathon>
+        }
+        groupBy: {
+          args: Prisma.HackathonGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HackathonGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HackathonCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HackathonCountAggregateOutputType> | number
+        }
+      }
+    }
+    HackathonParticipant: {
+      payload: Prisma.$HackathonParticipantPayload<ExtArgs>
+      fields: Prisma.HackathonParticipantFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.HackathonParticipantFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.HackathonParticipantFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        findFirst: {
+          args: Prisma.HackathonParticipantFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.HackathonParticipantFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        findMany: {
+          args: Prisma.HackathonParticipantFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
+        }
+        create: {
+          args: Prisma.HackathonParticipantCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        createMany: {
+          args: Prisma.HackathonParticipantCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.HackathonParticipantCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
+        }
+        delete: {
+          args: Prisma.HackathonParticipantDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        update: {
+          args: Prisma.HackathonParticipantUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        deleteMany: {
+          args: Prisma.HackathonParticipantDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.HackathonParticipantUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.HackathonParticipantUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>[]
+        }
+        upsert: {
+          args: Prisma.HackathonParticipantUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$HackathonParticipantPayload>
+        }
+        aggregate: {
+          args: Prisma.HackathonParticipantAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateHackathonParticipant>
+        }
+        groupBy: {
+          args: Prisma.HackathonParticipantGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HackathonParticipantGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.HackathonParticipantCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.HackathonParticipantCountAggregateOutputType> | number
+        }
+      }
+    }
+    User: {
+      payload: Prisma.$UserPayload<ExtArgs>
+      fields: Prisma.UserFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        findFirst: {
+          args: Prisma.UserFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        findMany: {
+          args: Prisma.UserFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        create: {
+          args: Prisma.UserCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        createMany: {
+          args: Prisma.UserCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        delete: {
+          args: Prisma.UserDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        update: {
+          args: Prisma.UserUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserPayload>
+        }
+        aggregate: {
+          args: Prisma.UserAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUser>
+        }
+        groupBy: {
+          args: Prisma.UserGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -967,68 +892,15 @@ export const TransactionIsolationLevel = runtime.makeStrictEnum({
 export type TransactionIsolationLevel = (typeof TransactionIsolationLevel)[keyof typeof TransactionIsolationLevel]
 
 
-export const HackathonScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  description: 'description',
-  startsAt: 'startsAt',
-  endsAt: 'endsAt',
-  isActive: 'isActive',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
-  authorId: 'authorId'
-} as const
-
-export type HackathonScalarFieldEnum = (typeof HackathonScalarFieldEnum)[keyof typeof HackathonScalarFieldEnum]
-
-
-export const HackathonParticipantScalarFieldEnum = {
-  id: 'id',
-  hackathonId: 'hackathonId',
-  userId: 'userId',
-  joinedAt: 'joinedAt'
-} as const
-
-export type HackathonParticipantScalarFieldEnum = (typeof HackathonParticipantScalarFieldEnum)[keyof typeof HackathonParticipantScalarFieldEnum]
-
-
-export const SubmissionScalarFieldEnum = {
-  id: 'id',
-  userId: 'userId',
-  hackathonId: 'hackathonId',
-  title: 'title',
-  description: 'description',
-  filePath: 'filePath',
-  status: 'status',
-  createdAt: 'createdAt'
-} as const
-
-export type SubmissionScalarFieldEnum = (typeof SubmissionScalarFieldEnum)[keyof typeof SubmissionScalarFieldEnum]
-
-
-export const UserScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  email: 'email',
-  role: 'role',
-  emailVerified: 'emailVerified',
-  image: 'image',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-} as const
-
-export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
-
-
 export const SessionScalarFieldEnum = {
   id: 'id',
   expiresAt: 'expiresAt',
   token: 'token',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt',
   ipAddress: 'ipAddress',
   userAgent: 'userAgent',
-  userId: 'userId'
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type SessionScalarFieldEnum = (typeof SessionScalarFieldEnum)[keyof typeof SessionScalarFieldEnum]
@@ -1063,6 +935,45 @@ export const VerificationScalarFieldEnum = {
 } as const
 
 export type VerificationScalarFieldEnum = (typeof VerificationScalarFieldEnum)[keyof typeof VerificationScalarFieldEnum]
+
+
+export const HackathonScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  startsAt: 'startsAt',
+  endsAt: 'endsAt',
+  isActive: 'isActive',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  authorId: 'authorId'
+} as const
+
+export type HackathonScalarFieldEnum = (typeof HackathonScalarFieldEnum)[keyof typeof HackathonScalarFieldEnum]
+
+
+export const HackathonParticipantScalarFieldEnum = {
+  id: 'id',
+  hackathonId: 'hackathonId',
+  userId: 'userId',
+  joinedAt: 'joinedAt'
+} as const
+
+export type HackathonParticipantScalarFieldEnum = (typeof HackathonParticipantScalarFieldEnum)[keyof typeof HackathonParticipantScalarFieldEnum]
+
+
+export const UserScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  email: 'email',
+  emailVerified: 'emailVerified',
+  role: 'role',
+  image: 'image',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1127,20 +1038,6 @@ export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaM
  * Reference to a field of type 'Boolean'
  */
 export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-/**
- * Reference to a field of type 'SubmissionStatus'
- */
-export type EnumSubmissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubmissionStatus'>
-    
-
-
-/**
- * Reference to a field of type 'SubmissionStatus[]'
- */
-export type ListEnumSubmissionStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SubmissionStatus[]'>
     
 
 
@@ -1266,13 +1163,12 @@ export type PrismaClientOptions = ({
   comments?: runtime.SqlCommenterPlugin[]
 }
 export type GlobalOmitConfig = {
-  hackathon?: Prisma.HackathonOmit
-  hackathonParticipant?: Prisma.HackathonParticipantOmit
-  submission?: Prisma.SubmissionOmit
-  user?: Prisma.UserOmit
   session?: Prisma.SessionOmit
   account?: Prisma.AccountOmit
   verification?: Prisma.VerificationOmit
+  hackathon?: Prisma.HackathonOmit
+  hackathonParticipant?: Prisma.HackathonParticipantOmit
+  user?: Prisma.UserOmit
 }
 
 /* Types for Logging */
